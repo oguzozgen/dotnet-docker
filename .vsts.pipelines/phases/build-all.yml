@@ -90,11 +90,11 @@ phases:
       repo: ${{ parameters.repo }}
       timeoutInMinutes: ${{ parameters.buildLegTimeoutInMinutes }}
       matrix: ${{ parameters.matrixLinuxAmd64 }}
-  # - template: test-linux-arm32v7.yml
-  #   parameters:
-  #     repo: ${{ parameters.repo }}
-  #     timeoutInMinutes: ${{ parameters.buildLegTimeoutInMinutes }}
-  #     matrix: ${{ parameters.matrixLinuxArm32v7 }}
+  - template: test-linux-arm32v7.yml
+    parameters:
+      repo: ${{ parameters.repo }}
+      timeoutInMinutes: ${{ parameters.buildLegTimeoutInMinutes }}
+      matrix: ${{ parameters.matrixLinuxArm32v7 }}
   - template: test-windows-amd64.yml
     parameters:
       phase: Test_NanoServerSac2016_amd64
