@@ -1,0 +1,23 @@
+parameters:
+  phase: null
+  dependsOn: null
+  repo: null
+  timeoutInMinutes: null
+  demands: []
+  matrix: {}
+phases:
+  - phase: ${{ parameters.phase }}
+    dependsOn: ${{ parameters.dependsOn }}
+    queue:
+      name: DotNetCore-Infra
+      timeoutInMinutes: ${{ parameters.timeoutInMinutes }}
+      demands: ${{ parameters.demands }}
+      parallel: 100
+      matrix: ${{ parameters.matrix }}
+    variables:
+      repo: ${{ parameters.repo }}
+    steps:
+      - template: ../steps/docker-cleanup-windows.yml
+      - powershell: ./test/run-test.ps1 -VersionFilter $(buildPath) -OSFilter $(osVersion) -Repo $(repo)
+        displayName: Test Images
+      - template: ../steps/docker-cleanup-windows.yml

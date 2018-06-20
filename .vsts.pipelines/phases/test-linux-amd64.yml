@@ -1,0 +1,27 @@
+parameters:
+  repo: null
+  timeoutInMinutes: null
+  matrix: {}
+phases:
+  - phase: Test_Linux_amd64
+    dependsOn: Build_Linux_amd64
+    queue:
+      name: DotNet-Build
+      timeoutInMinutes: ${{ parameters.timeoutInMinutes }}
+      demands:
+        - agent.os -equals linux
+      parallel: 100
+      matrix: ${{ parameters.matrix }}
+    variables:
+      repo: ${{ parameters.repo }}
+    steps:
+      - template: ../steps/docker-cleanup-linux.yml
+      - script: docker build --rm -t testrunner -f ./test/Dockerfile.linux.testrunner .
+        displayName: Pull testrunner Image
+        # The script task does not currently work for Build Images on Linux (curl ssl issues), using CmdLine as workaround.
+      - task: CmdLine@1
+        displayName: Run Tests
+        inputs:
+          filename: docker
+          arguments: run -v /var/run/docker.sock:/var/run/docker.sock testrunner pwsh -File ./test/run-test.ps1 -VersionFilter $(buildPath) -ArchitectureFilter amd64 -Repo $(repo)
+      - template: ../steps/docker-cleanup-linux.yml
