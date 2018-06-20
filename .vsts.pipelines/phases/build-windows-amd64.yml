@@ -2,6 +2,7 @@ parameters:
   phase: null
   imageBuilderImage: null
   manifest: null
+  repo: null
   timeoutInMinutes: null
   demands: []
   matrix: {}
@@ -11,7 +12,7 @@ phases:
       name: DotNetCore-Infra
       timeoutInMinutes: ${{ parameters.timeoutInMinutes }}
       demands: ${{ parameters.demands }}
-      parallel: 2
+      parallel: 3
       matrix: ${{ parameters.matrix }}
     variables:
       docker.baseArtifactName: $(Build.BuildId)
@@ -19,6 +20,7 @@ phases:
       imageBuilder.customArgs: --var VersionFilter=$(buildPath)
       imageBuilder.image: ${{ parameters.imageBuilderImage }}
       manifest: ${{ parameters.manifest }}
+      repo: ${{ parameters.repo }}
     steps:
       - template: ../steps/docker-cleanup-windows.yml
       - script: docker pull $(imageBuilder.image)
@@ -30,6 +32,6 @@ phases:
       - script: docker rm -f $(docker.setupContainerName)
         displayName: Cleanup Setup Container
         continueOnError: true
-      - script: $(Build.BinariesDirectory)/Microsoft.DotNet.ImageBuilder/Microsoft.DotNet.ImageBuilder.exe build --manifest $(manifest) --path $(buildPath) --os-version $(osVersion) --push --username $(dockerRegistry.userName) --password $(BotAccount-dotnet-dockerhub-bot-password) $(imageBuilder.customArgs) $(imageBuilder.queueArgs)
+      - script: $(Build.BinariesDirectory)/Microsoft.DotNet.ImageBuilder/Microsoft.DotNet.ImageBuilder.exe build --manifest $(manifest) --skip-test --path $(buildPath) --os-version $(osVersion) --repo-override microsoft/$(repo)=$(acr.server)/$(repo)-$(Build.BuildId) --skip-test --push --server $(acr.server) --username $(acr.userName) --password $(BotAccount-dotnet-docker-acr-bot-password) $(imageBuilder.customArgs) $(imageBuilder.queueArgs)
         displayName: Build Images
       - template: ../steps/docker-cleanup-windows.yml

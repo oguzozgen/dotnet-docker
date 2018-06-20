@@ -10,6 +10,7 @@ phases:
   - template: ../phases/build-all.yml
     parameters:
       manifest: manifest.samples.json
+      repo: dotnet-samples
       matrixLinuxAmd64:
         Build:
           buildPath: '*'

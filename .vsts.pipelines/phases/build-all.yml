@@ -1,8 +1,9 @@
 parameters:
   buildLegTimeoutInMinutes: 90
-  imageBuilderLinuxImage: microsoft/dotnet-buildtools-prereqs:image-builder-debian-20180607190320
-  imageBuilderWindowsImage: microsoft/dotnet-buildtools-prereqs:image-builder-nanoserver-20180601092731
+  imageBuilderLinuxImage: microsoft/dotnet-buildtools-prereqs:image-builder-debian-20180620154646
+  imageBuilderWindowsImage: microsoft/dotnet-buildtools-prereqs:image-builder-nanoserver-20180620084645
   manifest: manifest.json
+  repo: null
   matrixLinuxAmd64:
     Build_2_1:
       buildPath: 2.1*
@@ -42,12 +43,14 @@ phases:
     parameters:
       imageBuilderImage: ${{ parameters.imageBuilderLinuxImage }}
       manifest: ${{ parameters.manifest }}
+      repo: ${{ parameters.repo }}
       timeoutInMinutes: ${{ parameters.buildLegTimeoutInMinutes }}
       matrix: ${{ parameters.matrixLinuxAmd64 }}
   - template: build-linux-arm32v7.yml
     parameters:
       imageBuilderImage: ${{ parameters.imageBuilderLinuxImage }}
       manifest: ${{ parameters.manifest }}
+      repo: ${{ parameters.repo }}
       timeoutInMinutes: ${{ parameters.buildLegTimeoutInMinutes }}
       matrix: ${{ parameters.matrixLinuxArm32v7 }}
   - template: build-windows-amd64.yml
@@ -55,6 +58,7 @@ phases:
       phase: NanoServerSac2016_amd64
       imageBuilderImage: ${{ parameters.imageBuilderWindowsImage }}
       manifest: ${{ parameters.manifest }}
+      repo: ${{ parameters.repo }}
       timeoutInMinutes: ${{ parameters.buildLegTimeoutInMinutes }}
       demands:
         - VSTS_OS -equals Windows_Server_2016_Data_Center_with_Containers
@@ -64,6 +68,7 @@ phases:
       phase: NanoServer1709_amd64
       imageBuilderImage: ${{ parameters.imageBuilderWindowsImage }}
       manifest: ${{ parameters.manifest }}
+      repo: ${{ parameters.repo }}
       timeoutInMinutes: ${{ parameters.buildLegTimeoutInMinutes }}
       demands:
         - VSTS_OS -equals Windows_Server_2016_Data_Center_RS3
@@ -73,11 +78,12 @@ phases:
       phase: NanoServer1803_amd64
       imageBuilderImage: ${{ parameters.imageBuilderWindowsImage }}
       manifest: ${{ parameters.manifest }}
+      repo: ${{ parameters.repo }}
       timeoutInMinutes: ${{ parameters.buildLegTimeoutInMinutes }}
       demands:
         - VSTS_OS -equals Windows_Server_2016_Data_Center_RS4
       matrix: ${{ parameters.matrixWindows1803Amd64 }}
-  - template: build-finalize.yml
-    parameters:
-      imageBuilderImage: ${{ parameters.imageBuilderLinuxImage }}
-      manifest: ${{ parameters.manifest }}
+  # - template: build-finalize.yml
+  #   parameters:
+  #     imageBuilderImage: ${{ parameters.imageBuilderLinuxImage }}
+  #     manifest: ${{ parameters.manifest }}

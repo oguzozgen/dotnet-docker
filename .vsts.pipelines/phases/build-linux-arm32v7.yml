@@ -1,6 +1,7 @@
 parameters:
   imageBuilderImage: null
   manifest: null
+  repo: null
   timeoutInMinutes: null
   matrix: {}
 phases:
@@ -23,6 +24,7 @@ phases:
       imageBuilder.customArgs: --var VersionFilter=$(buildPath) --var ArchitectureFilter=arm
       imageBuilder.image: ${{ parameters.imageBuilderImage }}
       manifest: ${{ parameters.manifest }}
+      repo: ${{ parameters.repo }}
     steps:
       - template: ../steps/docker-cleanup-windows.yml
       - script: docker pull $(imageBuilder.image)
@@ -38,7 +40,7 @@ phases:
         displayName: Clone Repo
       - script: docker run $(docker.commonRunArgs) --name checkout_$(docker.baseArtifactName) $(docker.gitEnabledimage) git checkout $(Build.SourceVersion)
         displayName: Checkout Source
-      - script: docker run $(docker.commonRunArgs) --name image_builder_$(docker.baseArtifactName) $(imageBuilder.image) build --manifest $(manifest) --path $(buildPath) --architecture arm --skip-test --push --username $(dockerRegistry.userName) --password $(BotAccount-dotnet-dockerhub-bot-password) $(imageBuilder.customArgs) $(imageBuilder.queueArgs)
+      - script: docker run $(docker.commonRunArgs) --name image_builder_$(docker.baseArtifactName) $(imageBuilder.image) build --manifest $(manifest) --path $(buildPath) --architecture arm --repo-override microsoft/$(repo)=$(acr.server)/$(repo)-$(Build.BuildId) --skip-test --push --server $(acr.server) --username $(acr.userName) --password $(BotAccount-dotnet-docker-acr-bot-password) $(imageBuilder.customArgs) $(imageBuilder.queueArgs)
         displayName: Build Images
       - script: docker run $(docker.commonRunArgs) --name cleanup_$(docker.baseArtifactName) --entrypoint docker $(imageBuilder.image) system prune -a -f
         displayName: Cleanup ARM Docker
