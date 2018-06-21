@@ -17,7 +17,7 @@ phases:
     variables:
       docker.baseArtifactName: test_$(Build.BuildId)
       docker.certVolumeArg: -v cert_$(docker.baseArtifactName):/docker-certs
-      docker.commonRunArgs: --rm -v $(docker.repoVolumeName):/repo -w /repo $(docker.certVolumeArg) -e DOCKER_CERT_PATH=/docker-certs -e DOCKER_TLS_VERIFY=1 -e DOCKER_HOST=tcp://$(PiIp):2376
+      docker.commonRunArgs: -v $(docker.repoVolumeName):/repo -w /repo $(docker.certVolumeArg) -e DOCKER_CERT_PATH=/docker-certs -e DOCKER_TLS_VERIFY=1 -e DOCKER_HOST=tcp://$(PiIp):2376
       docker.gitEnabledimage: buildpack-deps:stretch-scm
       docker.repoVolumeName: repo_$(docker.baseArtifactName)
       docker.setupContainerName: setup_$(docker.baseArtifactName)
@@ -34,19 +34,19 @@ phases:
       - script: docker rm -f $(docker.setupContainerName)
         displayName: Cleanup container
         continueOnError: true
-      - script: docker run $(docker.commonRunArgs) --name clone_$(docker.baseArtifactName) $(docker.gitEnabledimage) git clone https://github.com/dotnet/dotnet-docker.git /repo
+      - script: docker run --rm $(docker.commonRunArgs) --name clone_$(docker.baseArtifactName) $(docker.gitEnabledimage) git clone https://github.com/dotnet/dotnet-docker.git /repo
         displayName: Clone Repo
-      - script: docker run $(docker.commonRunArgs) --name checkout_$(docker.baseArtifactName) $(docker.gitEnabledimage) git checkout $(Build.SourceVersion)
+      - script: docker run --rm $(docker.commonRunArgs) --name checkout_$(docker.baseArtifactName) $(docker.gitEnabledimage) git checkout $(Build.SourceVersion)
         displayName: Checkout Source
-      - script: docker run $(docker.commonRunArgs) --name login_$(docker.baseArtifactName) --entrypoint docker $(testrunner.image) login  -u $(acr.userName) -p $(BotAccount-dotnet-docker-acr-bot-password) $(acr.server)
+      - script: docker run $(docker.commonRunArgs) --name test_runner_$(docker.baseArtifactName) -e RUNNING_TESTS_IN_CONTAINER=true $(testrunner.image) docker login  -u $(acr.userName) -p $(BotAccount-dotnet-docker-acr-bot-password) $(acr.server)
         displayName: Docker login
-      - script: docker run $(docker.commonRunArgs) --name test_runner_$(docker.baseArtifactName) -e RUNNING_TESTS_IN_CONTAINER=true $(testrunner.image) pwsh -File ./test/run-test.ps1 -VersionFilter $(buildPath) -ArchitectureFilter arm -Repo $(acr.server)/$(repo)-$(stagingRepo.suffix)
+      - script: docker exec test_runner_$(docker.baseArtifactName) pwsh -File ./test/run-test.ps1 -VersionFilter $(buildPath) -ArchitectureFilter arm -Repo $(acr.server)/$(repo)-$(stagingRepo.suffix)
         displayName: Build Images
-      - script: docker run $(docker.commonRunArgs) --name logout_$(docker.baseArtifactName) --entrypoint docker $(testrunner.image) logout
-        displayName: Docker logout
-        condition: always()
-        continueOnError: true
-      - script: docker run $(docker.commonRunArgs) --name cleanup_$(docker.baseArtifactName) --entrypoint docker $(testrunner.image) system prune -a -f --volumes
+      # - script: docker run $(docker.commonRunArgs) --name logout_$(docker.baseArtifactName) --entrypoint docker $(testrunner.image) logout
+      #   displayName: Docker logout
+      #   condition: always()
+      #   continueOnError: true
+      - script: docker run $(docker.commonRunArgs) --name cleanup_$(docker.baseArtifactName) $(testrunner.image) docker system prune -a -f --volumes
         displayName: Cleanup ARM Docker
         condition: always()
         continueOnError: true
