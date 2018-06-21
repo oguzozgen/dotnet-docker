@@ -20,7 +20,7 @@ phases:
       - template: ../steps/docker-cleanup-linux.yml
       - script: docker build --rm -t testrunner -f ./test/Dockerfile.linux.testrunner .
         displayName: Pull testrunner Image
-      - script: docker run --rm -v /var/run/docker.sock:/var/run/docker.sock --name $(testRunner.Container) testrunner docker login  -u $(acr.userName) -p $(BotAccount-dotnet-docker-acr-bot-password) $(acr.server)
+      - script: docker run -v /var/run/docker.sock:/var/run/docker.sock --name $(testRunner.Container) testrunner docker login  -u $(acr.userName) -p $(BotAccount-dotnet-docker-acr-bot-password) $(acr.server)
         displayName: Docker login
       - script: docker start $(testRunner.Container)
         displayName: Start test runner container
