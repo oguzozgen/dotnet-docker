@@ -15,7 +15,7 @@ phases:
       parallel: 100
       matrix: ${{ parameters.matrix }}
     variables:
-      docker.baseArtifactName: $(Build.BuildId)
+      docker.baseArtifactName: test_$(Build.BuildId)
       docker.certVolumeArg: -v cert_$(docker.baseArtifactName):/docker-certs
       docker.commonRunArgs: --rm -v $(docker.repoVolumeName):/repo -w /repo $(docker.certVolumeArg) -e DOCKER_CERT_PATH=/docker-certs -e DOCKER_TLS_VERIFY=1 -e DOCKER_HOST=tcp://$(PiIp):2376
       docker.gitEnabledimage: buildpack-deps:stretch-scm
