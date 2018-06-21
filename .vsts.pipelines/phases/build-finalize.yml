@@ -3,7 +3,7 @@ parameters:
   manifest: null
 phases:
   - phase: Finalize
-    condition: or(succeeded(), and(skipped(), eq(variables['startingPhase'], 'publish')))
+    condition: or(succeeded(), eq(variables['startingPhase'], 'publish'))
     dependsOn:
       - Test_Linux_amd64
       - Test_Linux_arm32v7
