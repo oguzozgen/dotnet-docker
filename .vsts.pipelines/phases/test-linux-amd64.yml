@@ -4,7 +4,7 @@ parameters:
   matrix: {}
 phases:
   - phase: Test_Linux_amd64
-    condition: and(succeeded(), le(variables['startingPhase'], 2))
+    condition: or(succeeded(), and(skipped(), eq(variables['startingPhase'], 'test')))
     dependsOn: Build_Linux_amd64
     queue:
       name: DotNet-Build

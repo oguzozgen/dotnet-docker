@@ -3,13 +3,13 @@ parameters:
   manifest: null
 phases:
   - phase: Finalize
-    condition: and(succeeded(), le(variables['startingPhase'], 3))
+    condition: or(succeeded(), and(skipped(), eq(variables['startingPhase'], 'publish')))
     dependsOn:
-      - Linux_amd64
-      - Linux_arm32v7
-      - NanoServerSac2016_amd64
-      - NanoServer1709_amd64
-      - NanoServer1803_amd64
+      - Test_Linux_amd64
+      - Test_Linux_arm32v7
+      - Test_NanoServerSac2016_amd64
+      - Test_NanoServer1709_amd64
+      - Test_NanoServer1803_amd64
     queue:
       name: DotNet-Build
       demands:

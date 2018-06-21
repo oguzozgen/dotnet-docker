@@ -7,7 +7,7 @@ parameters:
   matrix: {}
 phases:
   - phase: ${{ parameters.phase }}
-    condition: and(succeeded(), le(variables['startingPhase'], 2))
+    condition: or(succeeded(), and(skipped(), eq(variables['startingPhase'], 'test')))
     dependsOn: ${{ parameters.dependsOn }}
     queue:
       name: DotNetCore-Infra
