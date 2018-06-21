@@ -39,7 +39,7 @@ phases:
         displayName: Checkout Source
       - script: docker run $(docker.commonRunArgs) --name login_$(docker.baseArtifactName) --entrypoint docker $(imageBuilder.image) login  -u $(acr.userName) -p $(BotAccount-dotnet-docker-acr-bot-password) $(acr.server)
         displayName: Docker login
-      - script: docker run $(docker.commonRunArgs) --name test_runner_$(docker.baseArtifactName) -e RUNNING_TESTS_IN_CONTAINER=true $(testrunner.image) pwsh -File ./test/run-test.ps1 -VersionFilter $(buildPath) -ArchitectureFilter arm -Repo $(repo)-$(Build.BuildId)
+      - script: docker run $(docker.commonRunArgs) --name test_runner_$(docker.baseArtifactName) -e RUNNING_TESTS_IN_CONTAINER=true $(testrunner.image) pwsh -File ./test/run-test.ps1 -VersionFilter $(buildPath) -ArchitectureFilter arm -Repo $(acr.server)/$(repo)-$(stagingRepo.suffix)
         displayName: Build Images
       - script: docker run $(docker.commonRunArgs) --name logout_$(docker.baseArtifactName) --entrypoint docker $(imageBuilder.image) logout
         displayName: Docker logout

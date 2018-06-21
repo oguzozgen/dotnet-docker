@@ -25,7 +25,7 @@ phases:
         displayName: Run Tests
         inputs:
           filename: docker
-          arguments: run -v /var/run/docker.sock:/var/run/docker.sock testrunner pwsh -File ./test/run-test.ps1 -VersionFilter $(buildPath) -ArchitectureFilter amd64 -Repo $(repo)-$(Build.BuildId)
+          arguments: run -v /var/run/docker.sock:/var/run/docker.sock testrunner pwsh -File ./test/run-test.ps1 -VersionFilter $(buildPath) -ArchitectureFilter amd64 -Repo $(acr.server)/$(repo)-$(stagingRepo.suffix)
       - script: docker logout
         displayName: Docker logout
         condition: always()
