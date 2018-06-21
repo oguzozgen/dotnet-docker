@@ -4,6 +4,7 @@ parameters:
   matrix: {}
 phases:
   - phase: Test_Linux_arm32v7
+    condition: and(succeeded(), le(variables['startingPhase'], '2'))
     dependsOn: Build_Linux_arm32v7
     queue:
       name: DotNetCore-Infra
