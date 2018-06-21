@@ -23,6 +23,7 @@ phases:
       docker.setupContainerName: setup_$(docker.baseArtifactName)
       testrunner.image: microsoft/dotnet-buildtools-prereqs:debian-stretch-docker-testrunner-63f2145-20184325094343
       repo: ${{ parameters.repo }}
+      testRunner.Container: testrunner-$(Build.BuildId)
     steps:
       - template: ../steps/docker-cleanup-windows.yml
       - script: docker pull $(testrunner.image)
