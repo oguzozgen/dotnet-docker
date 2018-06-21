@@ -1,6 +1,6 @@
 parameters:
-  buildLegTimeoutInMinutes: 90
-  testLegTimeoutInMinutes: 60
+  buildLegTimeoutInMinutes: 120
+  testLegTimeoutInMinutes: 120
   imageBuilderLinuxImage: microsoft/dotnet-buildtools-prereqs:image-builder-debian-20180620154646
   imageBuilderWindowsImage: microsoft/dotnet-buildtools-prereqs:image-builder-nanoserver-20180620084645
   manifest: manifest.json
