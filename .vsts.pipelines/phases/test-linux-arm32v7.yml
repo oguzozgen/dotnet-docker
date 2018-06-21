@@ -37,7 +37,7 @@ phases:
         displayName: Clone Repo
       - script: docker run $(docker.commonRunArgs) --name checkout_$(docker.baseArtifactName) $(docker.gitEnabledimage) git checkout $(Build.SourceVersion)
         displayName: Checkout Source
-      - script: docker run $(docker.commonRunArgs) --name test_runner_$(docker.baseArtifactName) -e RUNNING_TESTS_IN_CONTAINER=true $(testrunner.image) pwsh -File ./test/run-test.ps1 -VersionFilter $(buildPath) -ArchitectureFilter arm -Repo $(repo)
+      - script: docker run $(docker.commonRunArgs) --name test_runner_$(docker.baseArtifactName) -e RUNNING_TESTS_IN_CONTAINER=true $(testrunner.image) pwsh -File ./test/run-test.ps1 -VersionFilter $(buildPath) -ArchitectureFilter arm -Repo $(repo)-$(Build.BuildId)
         displayName: Build Images
       - script: docker run $(docker.commonRunArgs) --name cleanup_$(docker.baseArtifactName) --entrypoint docker $(imageBuilder.image) system prune -a -f
         displayName: Cleanup ARM Docker

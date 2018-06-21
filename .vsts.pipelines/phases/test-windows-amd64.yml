@@ -18,6 +18,6 @@ phases:
       repo: ${{ parameters.repo }}
     steps:
       - template: ../steps/docker-cleanup-windows.yml
-      - powershell: ./test/run-test.ps1 -VersionFilter $(buildPath) -OSFilter $(osVersion) -Repo $(repo)
+      - powershell: ./test/run-test.ps1 -VersionFilter $(buildPath) -OSFilter $(osVersion) -Repo $(repo)-$(Build.BuildId)
         displayName: Test Images
       - template: ../steps/docker-cleanup-windows.yml

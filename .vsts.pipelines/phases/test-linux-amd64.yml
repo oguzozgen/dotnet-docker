@@ -23,5 +23,5 @@ phases:
         displayName: Run Tests
         inputs:
           filename: docker
-          arguments: run -v /var/run/docker.sock:/var/run/docker.sock testrunner pwsh -File ./test/run-test.ps1 -VersionFilter $(buildPath) -ArchitectureFilter amd64 -Repo $(repo)
+          arguments: run -v /var/run/docker.sock:/var/run/docker.sock testrunner pwsh -File ./test/run-test.ps1 -VersionFilter $(buildPath) -ArchitectureFilter amd64 -Repo $(repo)-$(Build.BuildId)
       - template: ../steps/docker-cleanup-linux.yml
