@@ -18,10 +18,10 @@ namespace Microsoft.DotNet.Docker.Tests
 {
     public class ImageTests
     {
+        private static readonly string s_repoName = Environment.GetEnvironmentVariable("REPO") ?? GetManifestRepoName();
         private static readonly bool s_isNightlyRepo = s_repoName.Contains("nightly");
         private static readonly bool s_isRunningInContainer =
             Environment.GetEnvironmentVariable("RUNNING_TESTS_IN_CONTAINER") != null;
-        private static readonly string s_repoName = Environment.GetEnvironmentVariable("REPO") ?? GetManifestRepoName();
 
         private static readonly ImageData[] s_linuxTestData =
         {
