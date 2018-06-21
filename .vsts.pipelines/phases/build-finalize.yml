@@ -3,7 +3,7 @@ parameters:
   manifest: null
 phases:
   - phase: Finalize
-    condition: and(succeeded(), le(variables['startingPhase'], '3'))
+    condition: and(succeeded(), le(variables['startingPhase'], 3))
     dependsOn:
       - Linux_amd64
       - Linux_arm32v7

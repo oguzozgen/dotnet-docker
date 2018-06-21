@@ -6,7 +6,7 @@ parameters:
   matrix: {}
 phases:
   - phase: Build_Linux_amd64
-    condition: and(succeeded(), le(variables['startingPhase'], '1'))
+    condition: and(succeeded(), le(variables['startingPhase'], 1))
     queue:
       name: DotNet-Build
       timeoutInMinutes: ${{ parameters.timeoutInMinutes }}

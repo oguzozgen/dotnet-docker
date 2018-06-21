@@ -6,7 +6,7 @@ parameters:
   matrix: {}
 phases:
   - phase: Build_Linux_arm32v7
-    condition: and(succeeded(), le(variables['startingPhase'], '1'))
+    condition: and(succeeded(), le(variables['startingPhase'], 1))
     queue:
       name: DotNetCore-Infra
       timeoutInMinutes: ${{ parameters.timeoutInMinutes }}
