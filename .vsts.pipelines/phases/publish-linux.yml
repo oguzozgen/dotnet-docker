@@ -10,12 +10,7 @@ parameters:
 phases:
   - phase: ${{ parameters.phase }}
     condition: or(succeeded(), eq(variables['startingPhase'], 'publish'))
-    dependsOn:
-      Publish_Linux_amd64
-      Publish_Linux_arm32v7
-      Publish_NanoServerSac2016_amd64
-      Publish_NanoServer1709_amd64
-      Publish_NanoServer1803_amd64
+    dependsOn: ${{ parameters.dependsOn }}
     queue:
       name: DotNet-Build
       timeoutInMinutes: ${{ parameters.timeoutInMinutes }}
