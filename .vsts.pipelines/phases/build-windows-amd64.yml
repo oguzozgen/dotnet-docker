@@ -8,7 +8,7 @@ parameters:
   matrix: {}
 phases:
   - phase: ${{ parameters.phase }}
-    condition: and(succeeded(), eq(variables['startingPhase'], 'build'))
+    condition: or(succeeded(), eq(variables['startingPhase'], 'build'))
     queue:
       name: DotNetCore-Infra
       timeoutInMinutes: ${{ parameters.timeoutInMinutes }}

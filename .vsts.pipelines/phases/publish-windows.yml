@@ -1,6 +1,6 @@
 parameters:
   phase: null
-  imageBuilderImage: "microsoft/dotnet-buildtools-prereqs:image-builder-nanoserver-20180622091310"
+  imageBuilderImage: "microsoft/dotnet-buildtools-prereqs:image-builder-nanoserver-20180622125553"
   manifest: null
   dependsOn: null
   repo: null
