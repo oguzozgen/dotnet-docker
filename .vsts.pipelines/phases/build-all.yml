@@ -135,7 +135,7 @@ phases:
       matrix: ${{ parameters.matrixLinuxAmd64 }}
   - template: publish-linux.yml
     parameters:
-      phase: Publish_Linux_arm32
+      phase: Publish_Linux_arm32v7
       manifest: ${{ parameters.manifest }}
       dependsOn: Test_Linux_arm32v7
       repo: ${{ parameters.repo }}
