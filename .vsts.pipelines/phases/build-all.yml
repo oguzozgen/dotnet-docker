@@ -9,13 +9,16 @@ parameters:
   matrixLinuxAmd64:
     Build_2_1_Alpine:
       buildPath: 2.1*
-      osVersion: alpine
+      osVersion: alpine*
     Build_2_1_Bionic:
       buildPath: 2.1*
-      osVersion: bionic
+      osVersion: bionic*
+    Build_2_1_Buster:
+      buildPath: 2.1*
+      osVersion: buster*
     Build_2_1_Stretch:
       buildPath: 2.1*
-      osVersion: stretch
+      osVersion: stretch*
     Build_2_0_Jessie:
       buildPath: 2.0*
       osVersion: jessie
