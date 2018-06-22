@@ -129,6 +129,7 @@ phases:
     parameters:
       phase: Publish_Linux_amd64
       manifest: ${{ parameters.manifest }}
+      architecture: amd64
       dependsOn: Test_Linux_amd64
       repo: ${{ parameters.repo }}
       timeoutInMinutes: ${{ parameters.publishLegTimeoutInMinutes }}
@@ -137,6 +138,7 @@ phases:
     parameters:
       phase: Publish_Linux_arm32v7
       manifest: ${{ parameters.manifest }}
+      architecture: arm
       dependsOn: Test_Linux_arm32v7
       repo: ${{ parameters.repo }}
       timeoutInMinutes: ${{ parameters.publishLegTimeoutInMinutes }}
