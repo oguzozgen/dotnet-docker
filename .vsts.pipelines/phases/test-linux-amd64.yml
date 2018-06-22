@@ -29,7 +29,7 @@ phases:
         displayName: Run Tests
         inputs:
           filename: docker
-          arguments: exec $(testRunner.Container) pwsh -File ./test/run-test.ps1 -VersionFilter $(buildPath) -ArchitectureFilter amd64 -Repo $(acr.server)/$(repo)-$(stagingRepo.suffix)
+          arguments: exec $(testRunner.Container) pwsh -File ./test/run-test.ps1 -VersionFilter $(buildPath) -OSFilter $(osVersion) -ArchitectureFilter amd64 -Repo $(acr.server)/$(repo)-$(stagingRepo.suffix)
       - script: docker exec $(testRunner.Container) docker logout
         displayName: Docker logout
         condition: always()

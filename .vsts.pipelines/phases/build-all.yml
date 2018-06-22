@@ -7,15 +7,30 @@ parameters:
   manifest: manifest.json
   repo: null
   matrixLinuxAmd64:
-    Build_2_1:
+    Build_2_1_Alpine:
       buildPath: 2.1*
-    Build_2_0:
+      osVersion: alpine
+    Build_2_1_Bionic:
+      buildPath: 2.1*
+      osVersion: bionic
+    Build_2_1_Stretch:
+      buildPath: 2.1*
+      osVersion: stretch
+    Build_2_0_Jessie:
       buildPath: 2.0*
+      osVersion: jessie
+    Build_2_0_Stretch:
+      buildPath: 2.0*
+      osVersion: stretch
     Build_1_*:
       buildPath: 1.*
   matrixLinuxArm32v7:
-    Build_2_1:
+    Build_2_1_Bionic:
       buildPath: 2.1*
+      osVersion: bionic
+    Build_2_1_Stretch:
+      buildPath: 2.1*
+      osVersion: stretch
   matrixWindowsSac2016Amd64:
     Build_2_1:
       buildPath: 2.1*
