@@ -22,8 +22,9 @@ parameters:
     Build_2_0_Stretch:
       buildPath: 2.0*
       osVersion: stretch
-    Build_1_*:
+    Build_1_*_Jassie:
       buildPath: 1.*
+      osVersion: jessie
   matrixLinuxArm32v7:
     Build_2_1_Bionic:
       buildPath: 2.1*
