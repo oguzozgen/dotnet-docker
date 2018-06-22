@@ -31,10 +31,13 @@ parameters:
   matrixLinuxArm32v7:
     Build_2_1_Bionic:
       buildPath: 2.1*
-      osVersion: bionic
+      osVersion: bionic*
+    Build_2_1_Buster:
+      buildPath: 2.1*
+      osVersion: buster*
     Build_2_1_Stretch:
       buildPath: 2.1*
-      osVersion: stretch
+      osVersion: stretch*
   matrixWindowsSac2016Amd64:
     Build_2_1:
       buildPath: 2.1*
