@@ -1,6 +1,7 @@
 parameters:
   buildLegTimeoutInMinutes: 120
   testLegTimeoutInMinutes: 120
+  publishLegTimeoutInMinutes: 60
   imageBuilderLinuxImage: microsoft/dotnet-buildtools-prereqs:image-builder-debian-20180620154646
   imageBuilderWindowsImage: microsoft/dotnet-buildtools-prereqs:image-builder-nanoserver-20180620084645
   manifest: manifest.json
@@ -123,7 +124,55 @@ phases:
         - VSTS_OS -equals Windows_Server_2016_Data_Center_RS4
       matrix: ${{ parameters.matrixWindows1803Amd64 }}
 
-  # - template: publish.yml
-  #   parameters:
-  #     imageBuilderImage: ${{ parameters.imageBuilderLinuxImage }}
-  #     manifest: ${{ parameters.manifest }}
+
+  - template: publish-linux.yml
+    parameters:
+      phase: Publish_Linux_amd64
+      manifest: ${{ parameters.manifest }}
+      dependsOn: Test_Linux_amd64
+      repo: ${{ parameters.repo }}
+      timeoutInMinutes: ${{ parameters.publishLegTimeoutInMinutes }}
+      matrix: ${{ parameters.matrixLinuxAmd64 }}
+  - template: publish-linux.yml
+    parameters:
+      phase: Publish_Linux_arm32
+      manifest: ${{ parameters.manifest }}
+      dependsOn: Test_Linux_arm32v7
+      repo: ${{ parameters.repo }}
+      timeoutInMinutes: ${{ parameters.publishLegTimeoutInMinutes }}
+      matrix: ${{ parameters.matrixLinuxArm32v7 }}
+  - template: publish-windows.yml
+    parameters:
+      phase: Publish_NanoServerSac2016_amd64
+      manifest: ${{ parameters.manifest }}
+      dependsOn: Test_NanoServerSac2016_amd64
+      repo: ${{ parameters.repo }}
+      timeoutInMinutes: ${{ parameters.publishLegTimeoutInMinutes }}
+      demands:
+        - VSTS_OS -equals Windows_Server_2016_Data_Center_with_Containers
+      matrix: ${{ parameters.matrixWindowsSac2016Amd64 }}
+  - template: publish-windows.yml
+    parameters:
+      phase: Publish_NanoServer1709_amd64
+      manifest: ${{ parameters.manifest }}
+      dependsOn: Test_NanoServer1709_amd64
+      repo: ${{ parameters.repo }}
+      timeoutInMinutes: ${{ parameters.publishLegTimeoutInMinutes }}
+      demands:
+        - VSTS_OS -equals Windows_Server_2016_Data_Center_RS3
+      matrix: ${{ parameters.matrixWindows1709Amd64 }}
+  - template: publish-windows.yml
+    parameters:
+      phase: Publish_NanoServer1803_amd64
+      manifest: ${{ parameters.manifest }}
+      dependsOn: Test_NanoServer1803_amd64
+      repo: ${{ parameters.repo }}
+      timeoutInMinutes: ${{ parameters.publishLegTimeoutInMinutes }}
+      demands:
+        - VSTS_OS -equals Windows_Server_2016_Data_Center_RS4
+      matrix: ${{ parameters.matrixWindows1803Amd64 }}
+
+  - template: publish-finalize.yml
+    parameters:
+      imageBuilderImage: ${{ parameters.imageBuilderLinuxImage }}
+      manifest: ${{ parameters.manifest }}

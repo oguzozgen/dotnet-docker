@@ -1,0 +1,36 @@
+parameters:
+  phase: null
+  imageBuilderImage: "microsoft/dotnet-buildtools-prereqs:image-builder-debian-20180622161313"
+  manifest: null
+  dependsOn: null
+  repo: null
+  architecture: null
+  timeoutInMinutes: null
+  matrix: {}
+phases:
+  - phase: ${{ parameters.phase }}
+    condition: and(succeeded(), eq(variables['startingPhase'], 'publish'))
+    dependsOn: ${{ parameters.dependsOn }}
+    queue:
+      name: DotNet-Build
+      timeoutInMinutes: ${{ parameters.timeoutInMinutes }}
+      demands:
+        - agent.os -equals linux
+      parallel: 100
+      matrix: ${{ parameters.matrix }}
+    variables:
+      imageBuilder.image: ${{ parameters.imageBuilderImage }}
+      manifest: ${{ parameters.manifest }}
+      repo: ${{ parameters.repo }}
+      architecture: ${{ parameters.architecture }}
+    steps:
+      - template: ../steps/docker-cleanup-linux.yml
+      - script: docker pull $(imageBuilder.image)
+        displayName: Pull Image Builder
+        # The script task does not currently work for Build Images on Linux (curl ssl issues), using CmdLine as workaround.
+      - task: CmdLine@1
+        displayName: Build Images
+        inputs:
+          filename: docker
+          arguments: run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $(Build.SourcesDirectory):/repo -w /repo --name image_builder_$(Build.BuildId) $(imageBuilder.image) publishImages --manifest $(manifest) --architecture $(architecture) --path $(buildPath) --source-server $(acr.server) --source-username $(acr.userName) --source-password $(BotAccount-dotnet-docker-acr-bot-password) --destination-username $(dockerRegistry.userName) --destination-password $(BotAccount-dotnet-dockerhub-bot-password) $(imageBuilder.queueArgs) $(acr.server)/$(repo)-$(stagingRepo.suffix)
+      - template: ../steps/docker-cleanup-linux.yml
